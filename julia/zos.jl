@@ -1,7 +1,7 @@
 # zos.jl
 
 function parse_zospath(uri :: URILib_structure, 
-                         s :: String) :: Union{URILib_structure, Nothing}
+                       s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_letter(s[1])
@@ -11,8 +11,8 @@ function parse_zospath(uri :: URILib_structure,
 end
 
 function read_id44(uri :: URILib_structure, 
-                        s :: String,
-                        counter :: Int) :: Union{URILib_structure, Nothing}
+                   s :: String,
+                   counter :: Int) :: Union{URILib_structure, Nothing}
     if counter >= 44 && length(s) > 0 && s[1] != '('
         nothing
     elseif length(s) == 0
@@ -34,8 +34,8 @@ function read_id44(uri :: URILib_structure,
 end
 
 function read_id44_dot(uri :: URILib_structure, 
-                        s :: String,
-                        counter :: Int) :: Union{URILib_structure, Nothing}
+                       s :: String,
+                       counter :: Int) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_char(s[1])
@@ -48,7 +48,7 @@ function read_id44_dot(uri :: URILib_structure,
 end
 
 function parse_id8(uri :: URILib_structure, 
-                     s :: String) :: Union{URILib_structure, Nothing}
+                   s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_letter(s[1])
@@ -58,8 +58,8 @@ function parse_id8(uri :: URILib_structure,
 end
 
 function read_id8(uri :: URILib_structure, 
-                    s :: String,
-                    counter :: Int) :: Union{URILib_structure, Nothing}
+                  s :: String,
+                  counter :: Int) :: Union{URILib_structure, Nothing}
     if length(s) == 0 || (counter >= 8 && s[1] != ')')
         nothing
     elseif is_char(s[1])

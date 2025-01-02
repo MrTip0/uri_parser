@@ -1,7 +1,7 @@
 # scheme.jl
 
 function read_scheme(uri :: URILib_structure, 
-                       s :: String) :: Union{URILib_structure, Nothing}
+                     s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_char(s[1])
@@ -13,7 +13,7 @@ function read_scheme(uri :: URILib_structure,
 end
 
 function select_protocol(uri :: URILib_structure,
-                           s :: String) :: Union{URILib_structure, Nothing}
+                         s :: String) :: Union{URILib_structure, Nothing}
     if uri.scheme == "ftp"
         uri.port = "21"
         standard_parser(uri, s, parse_path)

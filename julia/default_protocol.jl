@@ -3,8 +3,8 @@
 include("autority.jl")
 
 function standard_parser(uri :: URILib_structure,
-                           s :: String, path_fun :: Function
-                           ) :: Union{URILib_structure, Nothing}
+                         s :: String, path_fun :: Function
+                         ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif s[1] == '/'
@@ -19,7 +19,7 @@ function standard_parser(uri :: URILib_structure,
 end
 
 function parse_path(uri :: URILib_structure,
-                      s :: String) :: Union{URILib_structure, Nothing}
+                    s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_char(s[1])
@@ -29,7 +29,7 @@ function parse_path(uri :: URILib_structure,
 end
 
 function read_path(uri :: URILib_structure,
-                      s :: String) :: Union{URILib_structure, Nothing}
+                   s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         uri
     elseif s[1] == '/'
@@ -46,7 +46,7 @@ function read_path(uri :: URILib_structure,
 end
 
 function read_path_divisor(uri :: URILib_structure,
-                   s :: String) :: Union{URILib_structure, Nothing}
+                           s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_char(s[1])
@@ -55,8 +55,8 @@ function read_path_divisor(uri :: URILib_structure,
 end
 
 function second_slash(uri :: URILib_structure,
-                        s :: String, path_fun :: Function
-                        ) :: Union{URILib_structure, Nothing}
+                      s :: String, path_fun :: Function
+                      ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_char(s[1])
@@ -71,7 +71,7 @@ function second_slash(uri :: URILib_structure,
 end
 
 function parse_query(uri :: URILib_structure,
-                       s :: String) :: Union{URILib_structure, Nothing}
+                     s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_char(s[1])
@@ -83,7 +83,7 @@ function parse_query(uri :: URILib_structure,
 end
 
 function read_query(uri :: URILib_structure,
-                      s :: String) :: Union{URILib_structure, Nothing}
+                    s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         uri
     elseif is_char(s[1])
@@ -95,7 +95,7 @@ function read_query(uri :: URILib_structure,
 end
 
 function parse_fragment(uri :: URILib_structure,
-                          s :: String) :: Union{URILib_structure, Nothing}
+                        s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_char(s[1])
@@ -105,7 +105,7 @@ function parse_fragment(uri :: URILib_structure,
 end
 
 function read_fragment(uri :: URILib_structure,
-                         s :: String) :: Union{URILib_structure, Nothing}
+                       s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         uri
     elseif is_char(s[1])

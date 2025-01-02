@@ -1,8 +1,8 @@
 # autority.jl
 
 function parse_autority(uri :: URILib_structure,
-                          s :: String, path_fun :: Function
-                          ) :: Union{URILib_structure, Nothing}
+                        s :: String, path_fun :: Function
+                        ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_char(s[1])
@@ -12,8 +12,8 @@ function parse_autority(uri :: URILib_structure,
 end
 
 function read_userinfo(uri :: URILib_structure,
-                         s :: String, path_fun :: Function
-                         ) :: Union{URILib_structure, Nothing}
+                       s :: String, path_fun :: Function
+                       ) :: Union{URILib_structure, Nothing}
     if length(s) == 0 || s[1] |> in(['/', ':', '.'])
         s = string(uri.userinfo, s)
         uri.userinfo = nothing
@@ -29,15 +29,15 @@ end
 
 
 function parse_ip(uri :: URILib_structure,
-                    s :: String, path_fun :: Function
-                    ) :: Union{URILib_structure, Nothing}
+                  s :: String, path_fun :: Function
+                  ) :: Union{URILib_structure, Nothing}
     uri.host = ""
     ip0(uri, s, 0, path_fun)
 end
 
 function ip0(uri :: URILib_structure, s :: String,
-               counter :: Int, path_fun :: Function
-               ) :: Union{URILib_structure, Nothing}
+             counter :: Int, path_fun :: Function
+             ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif s[1] |> in(['0', '1'])
@@ -50,8 +50,8 @@ function ip0(uri :: URILib_structure, s :: String,
 end
 
 function ip1(uri :: URILib_structure, s :: String,
-                counter :: Int, path_fun :: Function
-                ) :: Union{URILib_structure, Nothing}
+             counter :: Int, path_fun :: Function
+             ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_digit(s[1])
@@ -61,8 +61,8 @@ function ip1(uri :: URILib_structure, s :: String,
 end
 
 function ip2(uri :: URILib_structure, s :: String,
-                counter :: Int, path_fun :: Function
-                ) :: Union{URILib_structure, Nothing}
+             counter :: Int, path_fun :: Function
+             ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif s[1] |> in(['0', '1', '2', '3', '4'])
@@ -75,8 +75,8 @@ function ip2(uri :: URILib_structure, s :: String,
 end
 
 function ip3(uri :: URILib_structure, s :: String,
-                counter :: Int, path_fun :: Function
-                ) :: Union{URILib_structure, Nothing}
+             counter :: Int, path_fun :: Function
+             ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_digit(s[1])
@@ -86,8 +86,8 @@ function ip3(uri :: URILib_structure, s :: String,
 end
 
 function ip4(uri :: URILib_structure, s :: String,
-                counter :: Int, path_fun :: Function
-                ) :: Union{URILib_structure, Nothing}
+             counter :: Int, path_fun :: Function
+             ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif s[1] |> in(['0', '1', '2', '3', '4', '5'])
@@ -97,8 +97,8 @@ function ip4(uri :: URILib_structure, s :: String,
 end
 
 function ip5(uri :: URILib_structure, s :: String,
-                counter :: Int, path_fun :: Function
-                ) :: Union{URILib_structure, Nothing}
+             counter :: Int, path_fun :: Function
+             ) :: Union{URILib_structure, Nothing}
     if length(s) == 0 && counter == 3
         uri
     elseif length(s) == 0
@@ -114,8 +114,8 @@ function ip5(uri :: URILib_structure, s :: String,
 end
 
 function parse_host(uri :: URILib_structure,
-                      s :: String, path_fun :: Function
-                      ) :: Union{URILib_structure, Nothing}
+                    s :: String, path_fun :: Function
+                    ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_digit(s[1])
@@ -127,8 +127,8 @@ function parse_host(uri :: URILib_structure,
 end
 
 function host1(uri :: URILib_structure,
-                 s :: String, path_fun :: Function
-                 ) :: Union{URILib_structure, Nothing}
+               s :: String, path_fun :: Function
+               ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_char(s[1])
@@ -138,8 +138,8 @@ function host1(uri :: URILib_structure,
 end
 
 function read_host(uri :: URILib_structure,
-                     s :: String, path_fun :: Function
-                     ) :: Union{URILib_structure, Nothing}
+                   s :: String, path_fun :: Function
+                   ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         uri
     elseif s[1] == '.'
@@ -156,8 +156,8 @@ function read_host(uri :: URILib_structure,
 end
 
 function dotted(uri :: URILib_structure,
-                  s :: String, path_fun :: Function
-                  ) :: Union{URILib_structure, Nothing}
+                s :: String, path_fun :: Function
+                ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_letter(s[1])
@@ -167,8 +167,8 @@ function dotted(uri :: URILib_structure,
 end
 
 function choose_next_segment(uri :: URILib_structure,
-                               s :: String, path_fun :: Function
-                               ) :: Union{URILib_structure, Nothing}
+                             s :: String, path_fun :: Function
+                             ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         uri
     elseif is_char(s[1])
@@ -181,8 +181,8 @@ function choose_next_segment(uri :: URILib_structure,
 end
 
 function parse_port(uri :: URILib_structure,
-                      s :: String, path_fun :: Function
-                      ) :: Union{URILib_structure, Nothing}
+                    s :: String, path_fun :: Function
+                    ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_digit(s[1])
@@ -192,8 +192,8 @@ function parse_port(uri :: URILib_structure,
 end
 
 function read_port(uri :: URILib_structure,
-                     s :: String, path_fun :: Function
-                     ) :: Union{URILib_structure, Nothing}
+                   s :: String, path_fun :: Function
+                   ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         uri
     elseif is_digit(s[1])

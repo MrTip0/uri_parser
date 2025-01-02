@@ -6,16 +6,16 @@ end
 
 function urilib_display(uri :: URILib_structure, stream :: IO) :: Bool
     write(stream,
-        string(
-            "Scheme:\t\t", urilib_display_scheme(uri),
-            "\nUserinfo:\t", urilib_display_userinfo(uri),
-            "\nHost:\t\t", urilib_display_host(uri),
-            "\nPort:\t\t", uri.port,
-            "\nPath:\t\t", urilib_display_path(uri),
-            "\nQuery:\t\t", urilib_display_query(uri),
-            "\nFragment:\t", urilib_display_fragment(uri), "\n"
-        )
-    )
+          string(
+              "Scheme:\t\t", urilib_display_scheme(uri),
+              "\nUserinfo:\t", urilib_display_userinfo(uri),
+              "\nHost:\t\t", urilib_display_host(uri),
+              "\nPort:\t\t", uri.port,
+              "\nPath:\t\t", urilib_display_path(uri),
+              "\nQuery:\t\t", urilib_display_query(uri),
+              "\nFragment:\t", urilib_display_fragment(uri), "\n"
+          )
+          )
     true
 end
 

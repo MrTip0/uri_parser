@@ -11,7 +11,7 @@ function parse_mailto(uri :: URILib_structure,
 end
 
 function read_mailtouserinfo(uri :: URILib_structure,
-                      s :: String) :: Union{URILib_structure, Nothing}
+                             s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         uri
     elseif is_char(s[1])
@@ -24,7 +24,7 @@ end
 
 
 function parse_mailtonewshost(uri :: URILib_structure,
-                      s :: String) :: Union{URILib_structure, Nothing}
+                              s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_digit(s[1])
@@ -36,7 +36,7 @@ function parse_mailtonewshost(uri :: URILib_structure,
 end
 
 function mailtonewshost1(uri :: URILib_structure,
-                 s :: String) :: Union{URILib_structure, Nothing}
+                         s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_char(s[1])
@@ -46,7 +46,7 @@ function mailtonewshost1(uri :: URILib_structure,
 end
 
 function read_mailtonewshost(uri :: URILib_structure,
-                     s :: String) :: Union{URILib_structure, Nothing}
+                             s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         uri
     elseif s[1] == '.'
@@ -59,7 +59,7 @@ function read_mailtonewshost(uri :: URILib_structure,
 end
 
 function mailtonewsdotted(uri :: URILib_structure,
-                  s :: String) :: Union{URILib_structure, Nothing}
+                          s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_letter(s[1])
@@ -69,13 +69,13 @@ function mailtonewsdotted(uri :: URILib_structure,
 end
 
 function parse_mailtonewsip(uri :: URILib_structure,
-                    s :: String) :: Union{URILib_structure, Nothing}
+                            s :: String) :: Union{URILib_structure, Nothing}
     uri.host = ""
     mailtonewsip0(uri, s, 0)
 end
 
 function mailtonewsip0(uri :: URILib_structure, s :: String,
-               counter :: Int) :: Union{URILib_structure, Nothing}
+                       counter :: Int) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif s[1] |> in(['0', '1'])
@@ -88,7 +88,7 @@ function mailtonewsip0(uri :: URILib_structure, s :: String,
 end
 
 function mailtonewsip1(uri :: URILib_structure, s :: String,
-                counter :: Int) :: Union{URILib_structure, Nothing}
+                       counter :: Int) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_digit(s[1])
@@ -98,7 +98,7 @@ function mailtonewsip1(uri :: URILib_structure, s :: String,
 end
 
 function mailtonewsip2(uri :: URILib_structure, s :: String,
-                counter :: Int) :: Union{URILib_structure, Nothing}
+                       counter :: Int) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif s[1] |> in(['0', '1', '2', '3', '4'])
@@ -111,7 +111,7 @@ function mailtonewsip2(uri :: URILib_structure, s :: String,
 end
 
 function mailtonewsip3(uri :: URILib_structure, s :: String,
-                counter :: Int) :: Union{URILib_structure, Nothing}
+                       counter :: Int) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_digit(s[1])
@@ -121,7 +121,7 @@ function mailtonewsip3(uri :: URILib_structure, s :: String,
 end
 
 function mailtonewsip4(uri :: URILib_structure, s :: String,
-                counter :: Int) :: Union{URILib_structure, Nothing}
+                       counter :: Int) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif s[1] |> in(['0', '1', '2', '3', '4', '5'])
@@ -131,7 +131,7 @@ function mailtonewsip4(uri :: URILib_structure, s :: String,
 end
 
 function mailtonewsip5(uri :: URILib_structure, s :: String,
-                counter :: Int) :: Union{URILib_structure, Nothing}
+                       counter :: Int) :: Union{URILib_structure, Nothing}
     if length(s) == 0 && counter == 3
         uri
     elseif length(s) == 0

@@ -1,7 +1,7 @@
 # telfax.jl
 
 function parse_telfaxuserinfo(uri :: URILib_structure, 
-                       s :: String) :: Union{URILib_structure, Nothing}
+                              s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
     elseif is_char(s[1])
@@ -11,7 +11,7 @@ function parse_telfaxuserinfo(uri :: URILib_structure,
 end
 
 function read_telfaxuserinfo(uri :: URILib_structure, 
-                       s :: String) :: Union{URILib_structure, Nothing}
+                             s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         uri
     elseif is_char(s[1])
