@@ -72,7 +72,7 @@ function read_id8(uri :: URILib_structure,
 end
 
 function close_id8(uri :: URILib_structure, 
-                    s :: String) :: Union{URILib_structure, Nothing}
+                   s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         uri
     elseif s[1] == '#'

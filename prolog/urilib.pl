@@ -1,7 +1,5 @@
 % urilib.pl
 
-% TODO: format with emacs
-
 % digit/1
 digit('0').
 digit('1').
@@ -13,6 +11,7 @@ digit('6').
 digit('7').
 digit('8').
 digit('9').
+
 
 % letter/1
 letter('a').
@@ -74,7 +73,7 @@ char(X) :- digit(X).
 
 % urilib_parse/2
 urilib_parse(String, 
-    uri(Scheme0, Userinfo, Host, Port, Path, Query, Fragment)) :-
+             uri(Scheme0, Userinfo, Host, Port, Path, Query, Fragment)) :-
 
     string(String), !,
 
@@ -89,7 +88,7 @@ urilib_parse(String,
 
     % choose next automata
     choose_automata(Rest, Scheme0, Userinfo, Host, Port, Path, Query, 
-                                                                Fragment).
+                    Fragment).
 
 
 % parse_scheme/8
@@ -101,26 +100,26 @@ parse_scheme([X | Chars], [X | Scheme], Rest) :-
 
 % choose_automata/7
 choose_automata(String, http, Userinfo, Host, Port, Path,
-                                                Query, Fragment) :- !,
+                Query, Fragment) :- !,
     default_parser(String, http, Userinfo, Host, Port, Path, Query, Fragment).
 
 choose_automata(String, https, Userinfo, Host, Port, Path,
-                                                Query, Fragment) :- !,
+                Query, Fragment) :- !,
     default_parser(String, https, Userinfo, Host, Port, Path, Query, Fragment).
 
 choose_automata(String, ftp, Userinfo, Host, Port, Path,
-                                                Query, Fragment) :- !,
+                Query, Fragment) :- !,
     default_parser(String, ftp, Userinfo, Host, Port, Path, Query, Fragment).
 
 choose_automata(String, zos, Userinfo, Host, Port, Path,
-                                                Query, Fragment) :- !,
+                Query, Fragment) :- !,
     default_parser(String, zos, Userinfo, Host, Port, Path, Query, Fragment).
 
-choose_automata(String, mailto, Userinfo0, Host, 80, [], [], []) :- !,
+choose_automata(String, mailto, Userinfo0, Host, 25, [], [], []) :- !,
     mailto_parser(String, Userinfo, Host),
     atom_chars(Userinfo0, Userinfo).
 
-choose_automata(String, news, [], Host0, 80, [], [], []) :- !,
+choose_automata(String, news, [], Host0, 119, [], [], []) :- !,
     mailto_host_parser(String, Host),
     atom_chars(Host0, Host).
 
@@ -134,25 +133,51 @@ choose_automata(String, fax, Userinfo0, [], 80, [], [], []) :- !,
 
 
 % default_parser/8
+default_parser(['#' | String], ftp, [], [], 21, [], [], Fragment0) :- !,
+    fragment_parser(String, Fragment),
+    atom_chars(Fragment0, Fragment).
+
+default_parser(['#' | String], https, [], [], 443, [], [], Fragment0) :- !,
+    fragment_parser(String, Fragment),
+    atom_chars(Fragment0, Fragment).
+
 default_parser(['#' | String], _, [], [], 80, [], [], Fragment0) :- !,
     fragment_parser(String, Fragment),
     atom_chars(Fragment0, Fragment).
+
+default_parser(['?' | String], ftp, [], [], 21, [], Query0, Fragment) :- !,
+    query_parser(String, Query, Fragment),
+    atom_chars(Query0, Query).
+
+default_parser(['?' | String], https, [], [], 443, [], Query0, Fragment) :- !,
+    query_parser(String, Query, Fragment),
+    atom_chars(Query0, Query).
 
 default_parser(['?' | String], _, [], [], 80, [], Query0, Fragment) :- !,
     query_parser(String, Query, Fragment),
     atom_chars(Query0, Query).
 
 default_parser(['/' | String], Scheme, Userinfo, Host, Port, Path,
-                                    Query, Fragment) :- !,
+               Query, Fragment) :- !,
     second_slash_parser(String, Scheme, Userinfo, Host, Port,
-                                                    Path, Query, Fragment).
+                        Path, Query, Fragment).
 
 default_parser([X | String], zos, [], [], 80, Path0, Query, Fragment) :-
     char(X), !,
     zos_path_parser([X | String], Path, Query, Fragment),
     atom_chars(Path0, Path).
 
-default_parser([X | String], _, [], [], 80, Path0, Query, Fragment) :-
+default_parser([X | String], ftp, [], [], 21, Path0, Query, Fragment) :-
+    char(X), !,
+    default_path_parser([X | String], Path, Query, Fragment),
+    atom_chars(Path0, Path).
+
+default_parser([X | String], https, [], [], 443, Path0, Query, Fragment) :-
+    char(X), !,
+    default_path_parser([X | String], Path, Query, Fragment),
+    atom_chars(Path0, Path).
+
+default_parser([X | String], http, [], [], 80, Path0, Query, Fragment) :-
     char(X), !,
     default_path_parser([X | String], Path, Query, Fragment),
     atom_chars(Path0, Path).
@@ -215,21 +240,52 @@ default_path_slash([X | String], [X | Path], Query, Fragment) :-
 
 
 % second_slash_parser/8
-second_slash_parser([X | String], zos, [], [], [], Path0, Query, Fragment) :-
+second_slash_parser([X | String], zos, [], [], 80, Path0, Query, Fragment) :-
     char(X), !,
     zos_path_parser([X | String], Path, Query, Fragment),
     atom_chars(Path0, Path).
-second_slash_parser([X | String], _, [], [], [], Path0, Query, Fragment) :-
+
+second_slash_parser([X | String], ftp, [], [], 21, Path0, Query, Fragment) :-
     char(X), !,
     default_path_parser([X | String], Path, Query, Fragment),
     atom_chars(Path0, Path).
+
+second_slash_parser([X | String], https, [], [], 443, Path0, Query, Fragment) :-
+    char(X), !,
+    default_path_parser([X | String], Path, Query, Fragment),
+    atom_chars(Path0, Path).
+
+second_slash_parser([X | String], http, [], [], 80, Path0, Query, Fragment) :-
+    char(X), !,
+    default_path_parser([X | String], Path, Query, Fragment),
+    atom_chars(Path0, Path).
+
 second_slash_parser(['/' | String], Scheme, Userinfo, Host, Port, Path,
-                                                        Query, Fragment) :- !,
+                    Query, Fragment) :- !,
     authority_parser(String, Scheme, Userinfo, Host, Port,
-                                                Path, Query, Fragment).
+                     Path, Query, Fragment).
+
+second_slash_parser(['#' | String], ftp, [], [], 21, [], [], Fragment0) :- !,
+    fragment_parser(String, Fragment),
+    atom_chars(Fragment0, Fragment).
+
+second_slash_parser(['#' | String], https, [], [], 443, [], [], Fragment0) :- !,
+    fragment_parser(String, Fragment),
+    atom_chars(Fragment0, Fragment).
+
 second_slash_parser(['#' | String], _, [], [], 80, [], [], Fragment0) :- !,
     fragment_parser(String, Fragment),
     atom_chars(Fragment0, Fragment).
+
+second_slash_parser(['?' | String], ftp, [], [], 21, [], Query0, Fragment) :- !,
+    query_parser(String, Query, Fragment),
+    atom_chars(Query0, Query).
+
+second_slash_parser(['?' | String], https, [], [], 443, [], Query0,
+                    Fragment) :- !,
+    query_parser(String, Query, Fragment),
+    atom_chars(Query0, Query).
+
 second_slash_parser(['?' | String], _, [], [], 80, [], Query0, Fragment) :- !,
     query_parser(String, Query, Fragment),
     atom_chars(Query0, Query).
@@ -237,7 +293,7 @@ second_slash_parser(['?' | String], _, [], [], 80, [], Query0, Fragment) :- !,
 
 % authority_parser/8
 authority_parser(String, Scheme, Userinfo0, Host0, Port, Path, Query,
-                                                                Fragment) :-
+                 Fragment) :-
     userinfo_parser(String, Userinfo, Rest), !,
     atom_chars(Userinfo0, Userinfo),
     default_host_parser(Rest, Scheme, Host, Port, Path, Query, Fragment),
@@ -262,7 +318,7 @@ userinfo_reader(['@' | Rest], [], Rest) :- !.
 
 % default_host_parser/7
 default_host_parser([X | String], Scheme, [X | Host], Port, Path,
-                                                        Query, Fragment) :-
+                    Query, Fragment) :-
     letter(X), !,
     host_name_reader0(String, Scheme, Host, Port, Path, Query, Fragment).
 default_host_parser([X | String], Scheme, Host, Port, Path, Query, Fragment) :-
@@ -272,31 +328,37 @@ default_host_parser([X | String], Scheme, Host, Port, Path, Query, Fragment) :-
 
 % host_name_reader0/7
 host_name_reader0([X | String], Scheme, [X | Host], Port, Path,
-                                                        Query, Fragment) :-
+                  Query, Fragment) :-
     char(X), !,
     host_name_reader(String, Scheme, Host, Port, Path, Query, Fragment).
 
 
 % host_name_reader/7
+host_name_reader([], ftp, [], 21, [], [], []) :- !.
+host_name_reader([], https, [], 443, [], [], []) :- !.
 host_name_reader([], _, [], 80, [], [], []) :- !.
 host_name_reader([X | String], Scheme, [X | Host], Port, Path,
-                                                        Query, Fragment) :-
+                 Query, Fragment) :-
     char(X), !,
     host_name_reader(String, Scheme, Host, Port, Path, Query, Fragment).
 host_name_reader(['.' | String], Scheme, ['.' | Host], Port, Path,
-                                                        Query, Fragment) :- !,
+                 Query, Fragment) :- !,
     host_name_reader_dot(String, Scheme, Host, Port, Path, Query, Fragment).
 host_name_reader([':' | String], Scheme, [], Port0, Path, Query, Fragment) :-
     !,
     port_parser(String, Scheme, Port, Path, Query, Fragment),
     atom_chars(Port0, Port).
+host_name_reader(['/' | String], ftp, [], 21, Path, Query, Fragment) :- !,
+    choose_next_section(String, ftp, Path, Query, Fragment).
+host_name_reader(['/' | String], https, [], 443, Path, Query, Fragment) :- !,
+    choose_next_section(String, https, Path, Query, Fragment).
 host_name_reader(['/' | String], Scheme, [], 80, Path, Query, Fragment) :- !,
     choose_next_section(String, Scheme, Path, Query, Fragment).
 
 
 % host_name_reader_dot/7
 host_name_reader_dot([X | String], Scheme, [X | Host], Port, Path,
-                                                        Query, Fragment) :-
+                     Query, Fragment) :-
     letter(X), !,
     host_name_reader0(String, Scheme, Host, Port, Path, Query, Fragment).
 
@@ -318,82 +380,88 @@ port_reader([X | String], Scheme, [X | Port], Path, Query, Fragment) :-
 
 % ip0/8
 ip0(['0' | String], Scheme, ['0' | Host], Port, Path, Query,
-                                                    Fragment, Dots) :- !,
+    Fragment, Dots) :- !,
     ip1(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 ip0(['1' | String], Scheme, ['1' | Host], Port, Path, Query,
-                                                    Fragment, Dots) :- !,
+    Fragment, Dots) :- !,
     ip1(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 ip0(['2' | String], Scheme, ['2' | Host], Port, Path, Query,
-                                                    Fragment, Dots) :- !,
+    Fragment, Dots) :- !,
     ip2(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 
 
 % ip1/8
 ip1([X | String], Scheme, [X | Host], Port, Path, Query,
-                                                    Fragment, Dots) :-
+    Fragment, Dots) :-
     digit(X), !,
     ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 
 
 % ip2/8
 ip2(['0' | String], Scheme, ['0' | Host], Port, Path, Query,
-                                                    Fragment, Dots) :- !,
+    Fragment, Dots) :- !,
     ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 ip2(['1' | String], Scheme, ['1' | Host], Port, Path, Query,
-                                                    Fragment, Dots) :- !,
+    Fragment, Dots) :- !,
     ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 ip2(['2' | String], Scheme, ['2' | Host], Port, Path, Query,
-                                                    Fragment, Dots) :- !,
+    Fragment, Dots) :- !,
     ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 ip2(['3' | String], Scheme, ['3' | Host], Port, Path, Query,
-                                                    Fragment, Dots) :- !,
+    Fragment, Dots) :- !,
     ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 ip2(['4' | String], Scheme, ['3' | Host], Port, Path, Query,
-                                                    Fragment, Dots) :- !,
+    Fragment, Dots) :- !,
     ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 ip2(['5' | String], Scheme, ['5' | Host], Port, Path, Query,
-                                                    Fragment, Dots) :- !,
+    Fragment, Dots) :- !,
     ip4(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 
 
 % ip3/8
 ip3([X | String], Scheme, [X | Host], Port, Path, Query,
-                                                    Fragment, Dots) :-
+    Fragment, Dots) :-
     digit(X), !,
     ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 
 
 % ip4/8
 ip4(['0' | String], Scheme, ['0' | Host], Port, Path, Query,
-                                                    Fragment, Dots) :- !,
+    Fragment, Dots) :- !,
     ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 ip4(['1' | String], Scheme, ['1' | Host], Port, Path, Query,
-                                                    Fragment, Dots) :- !,
+    Fragment, Dots) :- !,
     ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 ip4(['2' | String], Scheme, ['2' | Host], Port, Path, Query,
-                                                    Fragment, Dots) :- !,
+    Fragment, Dots) :- !,
     ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 ip4(['3' | String], Scheme, ['3' | Host], Port, Path, Query,
-                                                    Fragment, Dots) :- !,
+    Fragment, Dots) :- !,
     ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 ip4(['4' | String], Scheme, ['4' | Host], Port, Path, Query,
-                                                    Fragment, Dots) :- !,
+    Fragment, Dots) :- !,
     ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 ip4(['5' | String], Scheme, ['5' | Host], Port, Path, Query,
-                                                    Fragment, Dots) :- !,
+    Fragment, Dots) :- !,
     ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 
 
 % ip5/8
-ip5([], _, [], [], [], [], [], 3) :- !.
+ip5([], ftp, [], 21, [], [], [], 3) :- !.
+ip5([], https, [], 443, [], [], [], 3) :- !.
+ip5([], _, [], 80, [], [], [], 3) :- !.
 ip5(['.' | String], Scheme, ['.' | Host], Port, Path, Query,
-                                                    Fragment, Dots) :-
+    Fragment, Dots) :-
     Dots < 3, !,
     Dots1 is Dots + 1,
     ip0(String, Scheme, Host, Port, Path, Query, Fragment, Dots1).
 ip5([':' | String], Scheme, [], Port0, Path, Query, Fragment, 3) :- !,
     port_parser(String, Scheme, Port, Path, Query, Fragment),
     atom_chars(Port0, Port).
+ip5(['/' | String], ftp, [], 21, Path, Query, Fragment, 3) :- !,
+    choose_next_section(String, ftp, Path, Query, Fragment).
+ip5(['/' | String], https, [], 443, Path, Query, Fragment, 3) :- !,
+    choose_next_section(String, https, Path, Query, Fragment).
 ip5(['/' | String], Scheme, [], 80, Path, Query, Fragment, 3) :- !,
     choose_next_section(String, Scheme, Path, Query, Fragment).
 
