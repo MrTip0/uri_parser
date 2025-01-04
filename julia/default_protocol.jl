@@ -78,8 +78,6 @@ function parse_query(uri :: URILib_structure,
     elseif is_char(s[1])
         uri.query = string(s[1])
         read_query(uri, s[2 : end])
-    elseif s[1] == '#'
-        parse_fragment(uri, s[2 : end])
     end
 end
 
