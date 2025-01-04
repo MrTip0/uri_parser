@@ -75,7 +75,7 @@ function parse_query(uri :: URILib_structure,
                      s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         nothing
-    elseif is_char(s[1])
+    elseif s[1] != '#'
         uri.query = string(s[1])
         read_query(uri, s[2 : end])
     end
@@ -85,7 +85,7 @@ function read_query(uri :: URILib_structure,
                     s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         uri
-    elseif is_char(s[1])
+    elseif s[1] != '#'
         uri.query = string(uri.query, s[1])
         read_query(uri, s[2 : end])
     elseif s[1] == '#'

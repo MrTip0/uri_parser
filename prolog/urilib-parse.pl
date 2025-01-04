@@ -1,6 +1,8 @@
 % urilib.pl
 % Nicolo' Luigi Allegris 909582
 
+% TODO: implement urilib_display/2 e urilib_display/1
+
 % digit/1
 digit('0').
 digit('1').
@@ -199,7 +201,7 @@ fragment_reader([X | String], [X | Fragment]) :-
 
 % query_parser/3
 query_parser([X | String], [X | Query], Fragment) :-
-    char(X), !,
+    X \= '#', !,
     query_reader(String, Query, Fragment).
 
 
@@ -209,7 +211,7 @@ query_reader(['#' | String], [], Fragment0) :- !,
     fragment_parser(String, Fragment),
     atom_chars(Fragment0, Fragment).
 query_reader([X | String], [X | Query], Fragment) :-
-    char(X), !,
+    X \= '#', !,
     query_reader(String, Query, Fragment).
 
 
