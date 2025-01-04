@@ -1,4 +1,5 @@
 # definitions.jl
+# Nicolo' Luigi Allegris 909582
 
 @kwdef mutable struct URILib_structure
     scheme   :: Union{String, Nothing} = nothing
