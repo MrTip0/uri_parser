@@ -1,8 +1,6 @@
 % urilib.pl
 % Nicolo' Luigi Allegris 909582
 
-% TODO: implement urilib_display/2 e urilib_display/1
-
 % digit/1
 digit('0').
 digit('1').
@@ -94,6 +92,21 @@ urilib_parse(String,
     choose_automata(Rest, Scheme0, Userinfo, Host, Port, Path, Query, 
                     Fragment).
 
+
+% urilib_display/2
+urilib_display(Stream,
+        uri(Scheme, Userinfo, Host, Port, Path, Query, Fragment)) :-
+    write(Stream, 'scheme:   '), write(Stream, Scheme), nl(Stream),
+    write(Stream, 'userinfo: '), write(Stream, Userinfo), nl(Stream),
+    write(Stream, 'host:     '), write(Stream, Host), nl(Stream),
+    write(Stream, 'port:     '), write(Stream, Port), nl(Stream),
+    write(Stream, 'path:     '), write(Stream, Path), nl(Stream),
+    write(Stream, 'query:    '), write(Stream, Query), nl(Stream),
+    write(Stream, 'fragment: '), write(Stream, Fragment), nl(Stream).
+
+
+% urilib_display/1
+urilib_display(X) :- current_output(Stream), urilib_display(Stream, X).
 
 % parse_scheme/8
 parse_scheme([':' | Rest], [], Rest) :- !.
