@@ -73,6 +73,7 @@ letter('Z').
 % char/1
 char(X) :- letter(X).
 char(X) :- digit(X).
+char('_').
 
 % urilib_parse/2
 urilib_parse(String, 
