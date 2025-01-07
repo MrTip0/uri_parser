@@ -101,7 +101,7 @@ urilib_parse(String,
 
 % urilib_display/2
 urilib_display(Stream,
-        uri(Scheme, Userinfo, Host, Port, Path, Query, Fragment)) :-
+               uri(Scheme, Userinfo, Host, Port, Path, Query, Fragment)) :-
     write(Stream, 'scheme:   '), write(Stream, Scheme), nl(Stream),
     write(Stream, 'userinfo: '), write(Stream, Userinfo), nl(Stream),
     write(Stream, 'host:     '), write(Stream, Host), nl(Stream),
@@ -181,7 +181,7 @@ default_parser(['?' | String], _, [], [], 80, [], Query0, Fragment) :- !,
     atom_chars(Query0, Query).
 
 default_parser(['/' | String], Scheme, Userinfo, Host, Port, Path,
-               Query, Fragment) :- !,
+	       Query, Fragment) :- !,
     second_slash_parser(String, Scheme, Userinfo, Host, Port,
                         Path, Query, Fragment).
 
@@ -284,7 +284,7 @@ second_slash_parser([X | String], http, [], [], 80, Path0, Query, Fragment) :-
     atom_chars(Path0, Path).
 
 second_slash_parser(['/' | String], Scheme, Userinfo, Host, Port, Path,
-                    Query, Fragment) :- !,
+		    Query, Fragment) :- !,
     authority_parser(String, Scheme, Userinfo, Host, Port,
                      Path, Query, Fragment).
 
@@ -305,7 +305,7 @@ second_slash_parser(['?' | String], ftp, [], [], 21, [], Query0, Fragment) :- !,
     atom_chars(Query0, Query).
 
 second_slash_parser(['?' | String], https, [], [], 443, [], Query0,
-                    Fragment) :- !,
+		    Fragment) :- !,
     query_parser(String, Query, Fragment),
     atom_chars(Query0, Query).
 
@@ -316,7 +316,7 @@ second_slash_parser(['?' | String], _, [], [], 80, [], Query0, Fragment) :- !,
 
 % authority_parser/8
 authority_parser(String, Scheme, Userinfo0, Host0, Port, Path, Query,
-                 Fragment) :-
+		 Fragment) :-
     userinfo_parser(String, Userinfo, Rest), !,
     atom_chars(Userinfo0, Userinfo),
     default_host_parser(Rest, Scheme, Host, Port, Path, Query, Fragment),
@@ -341,7 +341,7 @@ userinfo_reader(['@' | Rest], [], Rest) :- !.
 
 % default_host_parser/7
 default_host_parser([X | String], Scheme, [X | Host], Port, Path,
-                    Query, Fragment) :-
+		    Query, Fragment) :-
     letter(X), !,
     host_name_reader(String, Scheme, Host, Port, Path, Query, Fragment).
 default_host_parser([X | String], Scheme, Host, Port, Path, Query, Fragment) :-
@@ -354,11 +354,11 @@ host_name_reader([], ftp, [], 21, [], [], []) :- !.
 host_name_reader([], https, [], 443, [], [], []) :- !.
 host_name_reader([], _, [], 80, [], [], []) :- !.
 host_name_reader([X | String], Scheme, [X | Host], Port, Path,
-                 Query, Fragment) :-
+		 Query, Fragment) :-
     alphanum(X), !,
     host_name_reader(String, Scheme, Host, Port, Path, Query, Fragment).
 host_name_reader(['.' | String], Scheme, ['.' | Host], Port, Path,
-                 Query, Fragment) :- !,
+		 Query, Fragment) :- !,
     host_name_reader_dot(String, Scheme, Host, Port, Path, Query, Fragment).
 host_name_reader([':' | String], Scheme, [], Port0, Path, Query, Fragment) :-
     !,
@@ -374,7 +374,7 @@ host_name_reader(['/' | String], Scheme, [], 80, Path, Query, Fragment) :- !,
 
 % host_name_reader_dot/7
 host_name_reader_dot([X | String], Scheme, [X | Host], Port, Path,
-                     Query, Fragment) :-
+		     Query, Fragment) :-
     letter(X), !,
     host_name_reader(String, Scheme, Host, Port, Path, Query, Fragment).
 
