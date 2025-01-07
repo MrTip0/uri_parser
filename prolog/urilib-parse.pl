@@ -416,7 +416,8 @@ ip1([], _, [], 80, [], [], [], 3) :- !.
 ip1([X | String], Scheme, [X | Host], Port, Path, Query, Fragment, Dots) :-
     digit(X), !,
     ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-ip1(['.' | String], Scheme, ['.' | Host], Port, Path, Query, Fragment, Dots) :- !,
+ip1(['.' | String], Scheme, ['.' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
     Dots < 3, !,
     Dots1 is Dots + 1,
     ip0(String, Scheme, Host, Port, Path, Query, Fragment, Dots1).
@@ -449,7 +450,8 @@ ip2(['5' | String], Scheme, ['5' | Host], Port, Path, Query, Fragment, Dots) :-
 ip2([X | String], Scheme, [X | Host], Port, Path, Query, Fragment, Dots) :-
     digit(X), !,
     ip4(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-ip2(['.' | String], Scheme, ['.' | Host], Port, Path, Query, Fragment, Dots) :- !,
+ip2(['.' | String], Scheme, ['.' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
     Dots < 3, !,
     Dots1 is Dots + 1,
     ip0(String, Scheme, Host, Port, Path, Query, Fragment, Dots1).
@@ -464,7 +466,8 @@ ip3([], _, [], 80, [], [], [], 3) :- !.
 ip3([X | String], Scheme, [X | Host], Port, Path, Query, Fragment, Dots) :-
     digit(X), !,
     ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-ip3(['.' | String], Scheme, ['.' | Host], Port, Path, Query, Fragment, Dots) :- !,
+ip3(['.' | String], Scheme, ['.' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
     Dots < 3, !,
     Dots1 is Dots + 1,
     ip0(String, Scheme, Host, Port, Path, Query, Fragment, Dots1).
