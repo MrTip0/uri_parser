@@ -123,17 +123,6 @@ function parse_host(uri :: URILib_structure,
         parse_ip(uri, s, path_fun)
     elseif is_letter(s[1])
         uri.host = string(s[1])
-        host1(uri, s[2 : end], path_fun)
-    end
-end
-
-function host1(uri :: URILib_structure,
-               s :: String, path_fun :: Function
-               ) :: Union{URILib_structure, Nothing}
-    if length(s) == 0
-        nothing
-    elseif is_char(s[1])
-        uri.host = string(uri.host, s[1])
         read_host(uri, s[2 : end], path_fun)
     end
 end
@@ -146,7 +135,7 @@ function read_host(uri :: URILib_structure,
     elseif s[1] == '.'
         uri.host = string(uri.host, '.')
         dotted(uri, s[2 : end], path_fun)
-    elseif is_char(s[1])
+    elseif is_alphanumeric(s[1])
         uri.host = string(uri.host, s[1])
         read_host(uri, s[2 : end], path_fun)
     elseif s[1] == ':'
@@ -163,7 +152,7 @@ function dotted(uri :: URILib_structure,
         nothing
     elseif is_letter(s[1])
         uri.host = string(uri.host, s[1])
-        host1(uri, s[2 : end], path_fun)
+        read_host(uri, s[2 : end], path_fun)
     end
 end
 

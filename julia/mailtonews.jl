@@ -32,16 +32,6 @@ function parse_mailtonewshost(uri :: URILib_structure,
         parse_mailtonewsip(uri, s)
     elseif is_letter(s[1])
         uri.host = string(s[1])
-        mailtonewshost1(uri, s[2 : end])
-    end
-end
-
-function mailtonewshost1(uri :: URILib_structure,
-                         s :: String) :: Union{URILib_structure, Nothing}
-    if length(s) == 0
-        nothing
-    elseif is_char(s[1])
-        uri.host = string(uri.host, s[1])
         read_mailtonewshost(uri, s[2 : end])
     end
 end
@@ -53,7 +43,7 @@ function read_mailtonewshost(uri :: URILib_structure,
     elseif s[1] == '.'
         uri.host = string(uri.host, '.')
         mailtonewsdotted(uri, s[2 : end])
-    elseif is_char(s[1])
+    elseif is_alphanumeric(s[1])
         uri.host = string(uri.host, s[1])
         read_mailtonewshost(uri, s[2 : end])
     end
@@ -65,7 +55,7 @@ function mailtonewsdotted(uri :: URILib_structure,
         nothing
     elseif is_letter(s[1])
         uri.host = string(uri.host, s[1])
-        mailtonewshost1(uri, s[2 : end])
+        read_mailtonewshost(uri, s[2 : end])
     end
 end
 

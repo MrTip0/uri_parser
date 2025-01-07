@@ -68,9 +68,16 @@ letter('X').
 letter('Y').
 letter('Z').
 
+% alfanum/1
+alphanum(X) :- digit(X).
+alphanum(X) :- letter(X).
+
 % char/1
-char(X) :- letter(X).
-char(X) :- digit(X).
+char(X) :- alphanum(X).
+char('_').
+char('-').
+char('=').
+char('+').
 
 % urilib_parse/2
 urilib_parse(String, 
@@ -321,17 +328,10 @@ userinfo_reader(['@' | Rest], [], Rest) :- !.
 default_host_parser([X | String], Scheme, [X | Host], Port, Path,
                     Query, Fragment) :-
     letter(X), !,
-    host_name_reader0(String, Scheme, Host, Port, Path, Query, Fragment).
+    host_name_reader(String, Scheme, Host, Port, Path, Query, Fragment).
 default_host_parser([X | String], Scheme, Host, Port, Path, Query, Fragment) :-
     digit(X), !,
     ip0([X | String], Scheme, Host, Port, Path, Query, Fragment, 0).
-
-
-% host_name_reader0/7
-host_name_reader0([X | String], Scheme, [X | Host], Port, Path,
-                  Query, Fragment) :-
-    char(X), !,
-    host_name_reader(String, Scheme, Host, Port, Path, Query, Fragment).
 
 
 % host_name_reader/7
@@ -340,7 +340,7 @@ host_name_reader([], https, [], 443, [], [], []) :- !.
 host_name_reader([], _, [], 80, [], [], []) :- !.
 host_name_reader([X | String], Scheme, [X | Host], Port, Path,
                  Query, Fragment) :-
-    char(X), !,
+    alphanum(X), !,
     host_name_reader(String, Scheme, Host, Port, Path, Query, Fragment).
 host_name_reader(['.' | String], Scheme, ['.' | Host], Port, Path,
                  Query, Fragment) :- !,
@@ -361,7 +361,7 @@ host_name_reader(['/' | String], Scheme, [], 80, Path, Query, Fragment) :- !,
 host_name_reader_dot([X | String], Scheme, [X | Host], Port, Path,
                      Query, Fragment) :-
     letter(X), !,
-    host_name_reader0(String, Scheme, Host, Port, Path, Query, Fragment).
+    host_name_reader(String, Scheme, Host, Port, Path, Query, Fragment).
 
 
 % port_parser/6
@@ -578,22 +578,16 @@ mailto_reader([X | String], [X | Userinfo], Host) :-
 % mailto_host_parser/2
 mailto_host_parser([X | String], [X | Host]) :-
     letter(X), !,
-    mailto_host_name_reader0(String, Host).
+    mailto_host_name_reader(String, Host).
 mailto_host_parser([X | String], Host) :-
     digit(X), !,
     mailto_ip0([X | String], Host, 0).
 
 
-% mailto_host_name_reader0/2
-mailto_host_name_reader0([X | String], [X | Host]) :-
-    char(X), !,
-    mailto_host_name_reader(String, Host).
-
-
 % mailto_host_name_reader/2
 mailto_host_name_reader([], []) :- !.
 mailto_host_name_reader([X | String], [X | Host]) :-
-    char(X), !,
+    alphanum(X), !,
     mailto_host_name_reader(String, Host).
 mailto_host_name_reader(['.' | String], ['.' | Host]) :- !,
     mailto_host_name_reader_dot(String, Host).
@@ -602,7 +596,7 @@ mailto_host_name_reader(['.' | String], ['.' | Host]) :- !,
 % mailto_host_name_reader_dot/2
 mailto_host_name_reader_dot([X | String], [X | Host]) :-
     letter(X), !,
-    mailto_host_name_reader0(String, Host).
+    mailto_host_name_reader(String, Host).
 
 
 % mailto_ip0/3

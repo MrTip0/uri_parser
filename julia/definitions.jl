@@ -21,8 +21,12 @@ function is_letter(v :: Char)
                         'v', 'w', 'x', 'y', 'z'])
 end
 
+function is_alphanumeric(v :: Char)
+    is_letter(v) || is_digit(v)
+end
+
 function is_char(v :: Char)
-    is_letter(v) || is_digit(v) || v == '_'
+    is_alphanumeric(v) || v == '_' || v == '-' || v == '+' || v == '='
 end
 
 
