@@ -22,8 +22,10 @@ function select_protocol(uri :: URILib_structure,
         uri.port = "443"
         standard_parser(uri, s, parse_path)
     elseif uri.scheme == "http"
+        uri.port = "80"
         standard_parser(uri, s, parse_path)
     elseif uri.scheme == "zos"
+        uri.port = "80"
         standard_parser(uri, s, parse_zospath)
     elseif uri.scheme == "mailto"
         uri.port = "25"

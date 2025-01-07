@@ -11,7 +11,7 @@ function urilib_display(uri :: URILib_structure, stream :: IO) :: Bool
               "Scheme:\t\t", urilib_display_scheme(uri),
               "\nUserinfo:\t", urilib_display_userinfo(uri),
               "\nHost:\t\t", urilib_display_host(uri),
-              "\nPort:\t\t", uri.port,
+              "\nPort:\t\t", urilib_display_port(uri),
               "\nPath:\t\t", urilib_display_path(uri),
               "\nQuery:\t\t", urilib_display_query(uri),
               "\nFragment:\t", urilib_display_fragment(uri), "\n"
@@ -41,6 +41,14 @@ function urilib_display_host(uri :: URILib_structure) :: String
         "nothing"
     else
         string('"', uri.host, '"')
+    end
+end
+
+function urilib_display_port(uri :: URILib_structure) :: String
+    if uri.port === nothing
+        "nothing"
+    else
+        string('"', uri.port, '"')
     end
 end
 

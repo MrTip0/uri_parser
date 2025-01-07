@@ -5,7 +5,7 @@
     scheme   :: Union{String, Nothing} = nothing
     userinfo :: Union{String, Nothing} = nothing
     host     :: Union{String, Nothing} = nothing
-    port     :: String = "80"
+    port     :: Union{String, Nothing} = nothing
     path     :: Union{String, Nothing} = nothing
     query    :: Union{String, Nothing} = nothing
     fragment :: Union{String, Nothing} = nothing

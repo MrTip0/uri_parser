@@ -146,11 +146,11 @@ choose_automata(String, news, [], Host0, 119, [], [], []) :- !,
     mailto_host_parser(String, Host),
     atom_chars(Host0, Host).
 
-choose_automata(String, tel, Userinfo0, [], 80, [], [], []) :- !,
+choose_automata(String, tel, Userinfo0, [], [], [], [], []) :- !,
     tel_parser(String, Userinfo),
     atom_chars(Userinfo0, Userinfo).
 
-choose_automata(String, fax, Userinfo0, [], 80, [], [], []) :- !,
+choose_automata(String, fax, Userinfo0, [], [], [], [], []) :- !,
     tel_parser(String, Userinfo),
     atom_chars(Userinfo0, Userinfo).
 
