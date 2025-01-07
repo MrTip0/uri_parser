@@ -395,90 +395,134 @@ port_reader([X | String], Scheme, [X | Port], Path, Query, Fragment) :-
 
 
 % ip0/8
-ip0(['0' | String], Scheme, ['0' | Host], Port, Path, Query,
-    Fragment, Dots) :- !,
+ip0(['0' | String], Scheme, ['0' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
     ip1(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-ip0(['1' | String], Scheme, ['1' | Host], Port, Path, Query,
-    Fragment, Dots) :- !,
+ip0(['1' | String], Scheme, ['1' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
     ip1(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-ip0(['2' | String], Scheme, ['2' | Host], Port, Path, Query,
-    Fragment, Dots) :- !,
+ip0(['2' | String], Scheme, ['2' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
     ip2(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
+ip0([X | String], Scheme, [X | Host], Port, Path, Query, Fragment, Dots) :-
+    digit(X), !,
+    ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 
 
 % ip1/8
-ip1([X | String], Scheme, [X | Host], Port, Path, Query,
-    Fragment, Dots) :-
+ip1([], https, [], 443, [], [], [], 3) :- !.
+ip1([], ftp, [], 21, [], [], [], 3) :- !.
+ip1([], _, [], 80, [], [], [], 3) :- !.
+ip1([X | String], Scheme, [X | Host], Port, Path, Query, Fragment, Dots) :-
     digit(X), !,
     ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-
-
-% ip2/8
-ip2(['0' | String], Scheme, ['0' | Host], Port, Path, Query,
-    Fragment, Dots) :- !,
-    ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-ip2(['1' | String], Scheme, ['1' | Host], Port, Path, Query,
-    Fragment, Dots) :- !,
-    ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-ip2(['2' | String], Scheme, ['2' | Host], Port, Path, Query,
-    Fragment, Dots) :- !,
-    ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-ip2(['3' | String], Scheme, ['3' | Host], Port, Path, Query,
-    Fragment, Dots) :- !,
-    ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-ip2(['4' | String], Scheme, ['3' | Host], Port, Path, Query,
-    Fragment, Dots) :- !,
-    ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-ip2(['5' | String], Scheme, ['5' | Host], Port, Path, Query,
-    Fragment, Dots) :- !,
-    ip4(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-
-
-% ip3/8
-ip3([X | String], Scheme, [X | Host], Port, Path, Query,
-    Fragment, Dots) :-
-    digit(X), !,
-    ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-
-
-% ip4/8
-ip4(['0' | String], Scheme, ['0' | Host], Port, Path, Query,
-    Fragment, Dots) :- !,
-    ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-ip4(['1' | String], Scheme, ['1' | Host], Port, Path, Query,
-    Fragment, Dots) :- !,
-    ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-ip4(['2' | String], Scheme, ['2' | Host], Port, Path, Query,
-    Fragment, Dots) :- !,
-    ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-ip4(['3' | String], Scheme, ['3' | Host], Port, Path, Query,
-    Fragment, Dots) :- !,
-    ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-ip4(['4' | String], Scheme, ['4' | Host], Port, Path, Query,
-    Fragment, Dots) :- !,
-    ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-ip4(['5' | String], Scheme, ['5' | Host], Port, Path, Query,
-    Fragment, Dots) :- !,
-    ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
-
-
-% ip5/8
-ip5([], ftp, [], 21, [], [], [], 3) :- !.
-ip5([], https, [], 443, [], [], [], 3) :- !.
-ip5([], _, [], 80, [], [], [], 3) :- !.
-ip5(['.' | String], Scheme, ['.' | Host], Port, Path, Query,
-    Fragment, Dots) :-
+ip1(['.' | String], Scheme, ['.' | Host], Port, Path, Query, Fragment, Dots) :- !,
     Dots < 3, !,
     Dots1 is Dots + 1,
     ip0(String, Scheme, Host, Port, Path, Query, Fragment, Dots1).
-ip5([':' | String], Scheme, [], Port0, Path, Query, Fragment, 3) :- !,
+ip1(String, Scheme, [], Port, Path, Query, Fragment, 3) :- !,
+    ip6(String, Scheme, Port, Path, Query, Fragment).
+
+
+% ip2/8
+ip2([], https, [], 443, [], [], [], 3) :- !.
+ip2([], ftp, [], 21, [], [], [], 3) :- !.
+ip2([], _, [], 80, [], [], [], 3) :- !.
+ip2(['0' | String], Scheme, ['0' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
+    ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
+ip2(['1' | String], Scheme, ['1' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
+    ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
+ip2(['2' | String], Scheme, ['2' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
+    ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
+ip2(['3' | String], Scheme, ['3' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
+    ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
+ip2(['4' | String], Scheme, ['3' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
+    ip3(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
+ip2(['5' | String], Scheme, ['5' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
+    ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
+ip2([X | String], Scheme, [X | Host], Port, Path, Query, Fragment, Dots) :-
+    digit(X), !,
+    ip4(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
+ip2(['.' | String], Scheme, ['.' | Host], Port, Path, Query, Fragment, Dots) :- !,
+    Dots < 3, !,
+    Dots1 is Dots + 1,
+    ip0(String, Scheme, Host, Port, Path, Query, Fragment, Dots1).
+ip2(String, Scheme, [], Port, Path, Query, Fragment, 3) :- !,
+    ip6(String, Scheme, Port, Path, Query, Fragment).
+
+
+% ip3/8
+ip3([], https, [], 443, [], [], [], 3) :- !.
+ip3([], ftp, [], 21, [], [], [], 3) :- !.
+ip3([], _, [], 80, [], [], [], 3) :- !.
+ip3([X | String], Scheme, [X | Host], Port, Path, Query, Fragment, Dots) :-
+    digit(X), !,
+    ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
+ip3(['.' | String], Scheme, ['.' | Host], Port, Path, Query, Fragment, Dots) :- !,
+    Dots < 3, !,
+    Dots1 is Dots + 1,
+    ip0(String, Scheme, Host, Port, Path, Query, Fragment, Dots1).
+ip3(String, Scheme, [], Port, Path, Query, Fragment, 3) :- !,
+    ip6(String, Scheme, Port, Path, Query, Fragment).
+
+
+% ip4/8
+ip4([], https, [], 443, [], [], [], 3) :- !.
+ip4([], ftp, [], 21, [], [], [], 3) :- !.
+ip4([], _, [], 80, [], [], [], 3) :- !.
+ip4(['.' | String], Scheme, ['.' | Host], Port, Path, Query, Fragment, Dots) :-
+    Dots < 3, !,
+    Dots1 is Dots + 1,
+    ip0(String, Scheme, Host, Port, Path, Query, Fragment, Dots1).
+ip4(String, Scheme, [], Port, Path, Query, Fragment, 3) :- !,
+    ip6(String, Scheme, Port, Path, Query, Fragment).
+
+
+% ip5/8
+ip5([], https, [], 443, [], [], [], 3) :- !.
+ip5([], ftp, [], 21, [], [], [], 3) :- !.
+ip5([], _, [], 80, [], [], [], 3) :- !.
+ip5(['0' | String], Scheme, ['0' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
+    ip4(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
+ip5(['1' | String], Scheme, ['1' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
+    ip4(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
+ip5(['2' | String], Scheme, ['2' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
+    ip4(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
+ip5(['3' | String], Scheme, ['3' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
+    ip4(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
+ip5(['4' | String], Scheme, ['4' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
+    ip4(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
+ip5(['5' | String], Scheme, ['5' | Host], Port, Path, Query, Fragment, Dots) :-
+    !,
+    ip4(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
+ip5(['.' | String], Scheme, ['.' | Host], Port, Path, Query, Fragment, Dots) :-
+    Dots < 3, !,
+    Dots1 is Dots + 1,
+    ip0(String, Scheme, Host, Port, Path, Query, Fragment, Dots1).
+ip5(String, Scheme, [], Port, Path, Query, Fragment, 3) :- !,
+    ip6(String, Scheme, Port, Path, Query, Fragment).
+
+
+% ip6/8
+ip6([':' | String], Scheme, Port0, Path, Query, Fragment) :- !,
     port_parser(String, Scheme, Port, Path, Query, Fragment),
     atom_chars(Port0, Port).
-ip5(['/' | String], ftp, [], 21, Path, Query, Fragment, 3) :- !,
+ip6(['/' | String], ftp, 21, Path, Query, Fragment) :- !,
     choose_next_section(String, ftp, Path, Query, Fragment).
-ip5(['/' | String], https, [], 443, Path, Query, Fragment, 3) :- !,
+ip6(['/' | String], https, 443, Path, Query, Fragment) :- !,
     choose_next_section(String, https, Path, Query, Fragment).
-ip5(['/' | String], Scheme, [], 80, Path, Query, Fragment, 3) :- !,
+ip6(['/' | String], Scheme, 80, Path, Query, Fragment) :- !,
     choose_next_section(String, Scheme, Path, Query, Fragment).
 
 
