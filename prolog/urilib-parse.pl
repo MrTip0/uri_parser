@@ -99,6 +99,21 @@ urilib_parse(String,
                     Fragment).
 
 
+% urilib_display/2
+urilib_display(Stream,
+        uri(Scheme, Userinfo, Host, Port, Path, Query, Fragment)) :-
+    write(Stream, 'scheme:   '), write(Stream, Scheme), nl(Stream),
+    write(Stream, 'userinfo: '), write(Stream, Userinfo), nl(Stream),
+    write(Stream, 'host:     '), write(Stream, Host), nl(Stream),
+    write(Stream, 'port:     '), write(Stream, Port), nl(Stream),
+    write(Stream, 'path:     '), write(Stream, Path), nl(Stream),
+    write(Stream, 'query:    '), write(Stream, Query), nl(Stream),
+    write(Stream, 'fragment: '), write(Stream, Fragment), nl(Stream).
+
+
+% urilib_display/1
+urilib_display(X) :- current_output(Stream), urilib_display(Stream, X).
+
 % parse_scheme/8
 parse_scheme([':' | Rest], [], Rest) :- !.
 parse_scheme([X | Chars], [X | Scheme], Rest) :-
@@ -206,7 +221,7 @@ fragment_reader([X | String], [X | Fragment]) :-
 
 % query_parser/3
 query_parser([X | String], [X | Query], Fragment) :-
-    char(X), !,
+    X \= '#', !,
     query_reader(String, Query, Fragment).
 
 
@@ -216,7 +231,7 @@ query_reader(['#' | String], [], Fragment0) :- !,
     fragment_parser(String, Fragment),
     atom_chars(Fragment0, Fragment).
 query_reader([X | String], [X | Query], Fragment) :-
-    char(X), !,
+    X \= '#', !,
     query_reader(String, Query, Fragment).
 
 
