@@ -221,7 +221,7 @@ fragment_reader([X | String], [X | Fragment]) :-
 
 % query_parser/3
 query_parser([X | String], [X | Query], Fragment) :-
-    X \= '#', !,
+    char(X), !,
     query_reader(String, Query, Fragment).
 
 
@@ -231,7 +231,7 @@ query_reader(['#' | String], [], Fragment0) :- !,
     fragment_parser(String, Fragment),
     atom_chars(Fragment0, Fragment).
 query_reader([X | String], [X | Query], Fragment) :-
-    X \= '#', !,
+    char(X), !,
     query_reader(String, Query, Fragment).
 
 
