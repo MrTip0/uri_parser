@@ -63,8 +63,9 @@ function ip1(uri :: URILib_structure, s :: String,
     elseif is_digit(s[1])
         uri.host = string(uri.host, s[1])
         ip3(uri, s[2 : end], counter, path_fun)
-    elseif s[1] == '.'
-        ip4(uri, s, counter, path_fun)
+    elseif s[1] == '.' && counter < 3
+        uri.host = string(uri.host, s[1])
+        ip0(uri, s[2 : end], counter+1, path_fun)
     elseif counter == 3
         ip6(uri, s, path_fun)
     end
@@ -86,8 +87,9 @@ function ip2(uri :: URILib_structure, s :: String,
     elseif s[1] |> in(['6', '7', '8', '9'])
         uri.host = string(uri.host, s[1])
         ip4(uri, s[2 : end], counter, path_fun)
-    elseif s[1] == '.'
-        ip4(uri, s, counter, path_fun)
+    elseif s[1] == '.' && counter < 3
+        uri.host = string(uri.host, s[1])
+        ip0(uri, s[2 : end], counter+1, path_fun)
     elseif counter == 3
         ip6(uri, s, path_fun)
     end
@@ -103,8 +105,9 @@ function ip3(uri :: URILib_structure, s :: String,
     elseif is_digit(s[1])
         uri.host = string(uri.host, s[1])
         ip4(uri, s[2 : end], counter, path_fun)
-    elseif s[1] == '.'
-        ip4(uri, s, counter, path_fun)
+    elseif s[1] == '.' && counter < 3
+        uri.host = string(uri.host, s[1])
+        ip0(uri, s[2 : end], counter+1, path_fun)
     elseif counter == 3
         ip6(uri, s, path_fun)
     end
@@ -135,8 +138,9 @@ function ip5(uri :: URILib_structure, s :: String,
     elseif s[1] |> in(['0', '1', '2', '3', '4', '5'])
         uri.host = string(uri.host, s[1])
         ip4(uri, s[2 : end], counter, path_fun)
-    elseif s[1] == '.'
-        ip4(uri, s, counter, path_fun)
+    elseif s[1] == '.' && counter < 3
+        uri.host = string(uri.host, s[1])
+        ip0(uri, s[2 : end], counter+1, path_fun)
     elseif counter == 3
         ip6(uri, s, path_fun)
     end
