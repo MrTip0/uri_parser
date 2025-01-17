@@ -16,6 +16,9 @@ include("display.jl")
 function urilib_parse(s :: String) :: Union{URILib_structure, Nothing}
     uri = URILib_structure(scheme = "")
     read_scheme(uri, s)
+    if uri.path === nothing && uri.scheme === "query"
+        error("Invalid URI")
+    end
 end
 
 function urilib_scheme(uri :: URILib_structure) :: Union{String, Nothing}

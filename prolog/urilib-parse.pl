@@ -68,9 +68,11 @@ letter('X').
 letter('Y').
 letter('Z').
 
+
 % alfanum/1
 alphanum(X) :- digit(X).
 alphanum(X) :- letter(X).
+
 
 % char/1
 char(X) :- alphanum(X).
@@ -79,11 +81,12 @@ char('-').
 char('=').
 char('+').
 
+
 % urilib_parse/2
 urilib_parse(String, 
              uri(Scheme0, Userinfo, Host, Port, Path, Query, Fragment)) :-
 
-    string(String), !,
+    string(String),
 
     % split string in chars
     string_chars(String, Chars),
@@ -96,7 +99,15 @@ urilib_parse(String,
 
     % choose next automata
     choose_automata(Rest, Scheme0, Userinfo, Host, Port, Path, Query, 
-                    Fragment).
+                    Fragment),
+                    
+    % remove this if the zos path is not necessary
+    is_zos_path_ok(Scheme, Path).
+
+
+% is_zos_path_ok/2
+is_zos_path_ok(zos, Path) :- !, Path \= [].
+is_zos_path_ok(_, _).
 
 
 % urilib_display/2
@@ -113,6 +124,7 @@ urilib_display(Stream,
 
 % urilib_display/1
 urilib_display(X) :- current_output(Stream), urilib_display(Stream, X).
+
 
 % parse_scheme/8
 parse_scheme([':' | Rest], [], Rest) :- !.
