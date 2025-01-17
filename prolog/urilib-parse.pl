@@ -110,6 +110,11 @@ is_zos_path_ok(zos, Path) :- !, Path \= [].
 is_zos_path_ok(_, _).
 
 
+% is_zos_path_ok/2
+is_zos_path_ok(zos, Path) :- !, Path \= [].
+is_zos_path_ok(_, _).
+
+
 % urilib_display/2
 urilib_display(Stream,
                uri(Scheme, Userinfo, Host, Port, Path, Query, Fragment)) :-
