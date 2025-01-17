@@ -7,7 +7,7 @@ function standard_parser(uri :: URILib_structure,
                          s :: String, path_fun :: Function
                          ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
-        error("Invalid URI")
+        uri
     elseif s[1] == '/'
         second_slash(uri, s[2 : end], path_fun)
     elseif is_char(s[1])
