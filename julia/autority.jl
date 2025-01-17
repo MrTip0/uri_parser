@@ -19,7 +19,7 @@ function read_userinfo(uri :: URILib_structure,
                        ) :: Union{URILib_structure, Nothing}
     if length(s) == 0 || s[1] |> in(['/', ':', '.'])
         s = string(uri.userinfo, s)
-        uri.userinfo = error("Invalid URI")
+        uri.userinfo = nothing
         parse_host(uri, s, path_fun)
     elseif is_char(s[1])
         uri.userinfo = string(uri.userinfo, s[1])
