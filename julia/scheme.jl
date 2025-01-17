@@ -4,12 +4,14 @@
 function read_scheme(uri :: URILib_structure, 
                      s :: String) :: Union{URILib_structure, Nothing}
     if length(s) == 0
-        nothing
+        error("Invalid URI")
     elseif is_char(s[1])
         uri.scheme = string(uri.scheme, s[1])
         read_scheme(uri, s[2 : end])
     elseif s[1] == ':'
         select_protocol(uri, s[2 : end])
+    else
+        error("Invalid URI")
     end
 end
 
@@ -35,6 +37,8 @@ function select_protocol(uri :: URILib_structure,
         parse_mailtonewshost(uri, s)
     elseif uri.scheme |> in(["tel", "fax"])
         parse_telfaxuserinfo(uri, s)
+    else
+        error("Invalid URI")
     end
 end
 
