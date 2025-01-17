@@ -14,11 +14,13 @@ include("zos.jl")
 include("display.jl")
 
 function urilib_parse(s :: String) :: Union{URILib_structure, Nothing}
-    uri = URILib_structure(scheme = "")
-    read_scheme(uri, s)
-    if uri.path === nothing && uri.scheme === "query"
-        error("Invalid URI")
-    end
+    ((uri) -> begin
+        if uri.path === nothing && uri.scheme === "query"
+            error("Invalid URI")
+        else
+            uri
+        end
+    end)(read_scheme(URILib_structure(scheme = ""), s))
 end
 
 function urilib_scheme(uri :: URILib_structure) :: Union{String, Nothing}
