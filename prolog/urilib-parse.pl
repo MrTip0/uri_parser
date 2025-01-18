@@ -1,3 +1,4 @@
+% -*- Prolog -*-
 % urilib.pl
 % Nicolo' Luigi Allegris 909582
 
