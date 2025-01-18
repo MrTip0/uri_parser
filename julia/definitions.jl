@@ -1,3 +1,4 @@
+# -*- julia -*-
 # definitions.jl
 # Nicolo' Luigi Allegris 909582
 

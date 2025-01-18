@@ -1,3 +1,4 @@
+# -*- julia -*-
 # parser.jl
 # Nicolo' Luigi Allegris 909582
 

@@ -1,3 +1,4 @@
+# -*- julia -*-
 # telfax.jl
 # Nicolo' Luigi Allegris 909582
 

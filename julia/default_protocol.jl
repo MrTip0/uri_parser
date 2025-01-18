@@ -1,3 +1,4 @@
+# -*- julia -*-
 # default_protocol.jl
 # Nicolo' Luigi Allegris 909582
 

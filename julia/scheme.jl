@@ -1,3 +1,4 @@
+# -*- julia -*-
 # scheme.jl
 # Nicolo' Luigi Allegris 909582
 
