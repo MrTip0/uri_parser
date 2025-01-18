@@ -81,6 +81,7 @@ char('_').
 char('-').
 char('=').
 char('+').
+char(':').
 
 
 % urilib_parse/2
