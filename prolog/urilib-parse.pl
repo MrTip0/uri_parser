@@ -121,7 +121,7 @@ urilib_parse(String,
 urilib_parse(String, 
              uri(Scheme, Userinfo, Host, Port, Path, Query, Fragment)) :-
 
-    var(String), atom(Scheme), is_default_order(Scheme), !, Host \= [],
+    var(String), atom(Scheme), is_default_order(Scheme), !,
 
     % write to string
     userinfo_printable(Userinfo, Userinfo0),
@@ -198,7 +198,7 @@ port_printable(http, 80, '') :- !.
 port_printable(https, 443, '') :- !.
 port_printable(ftp, 21, '') :- !.
 port_printable(zos, 80, '') :- !.
-port_printable(_, Port, Port0) :- !,
+port_printable(_, Port, Port0) :- !, atom(Port),
     atom_concat(':', Port, Port0).
 
 % path_printable/2
