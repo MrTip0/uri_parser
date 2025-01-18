@@ -102,6 +102,120 @@ urilib_parse(String,
     choose_automata(Rest, Scheme0, Userinfo, Host, Port, Path, Query, 
                     Fragment).
 
+urilib_parse(String, 
+             uri(Scheme, [], [], _, Path, Query, Fragment)) :-
+
+    var(String), atom(Scheme), is_default_order(Scheme), !,
+
+    % write to string
+    path_printable(Path, Path0),
+    query_printable(Query, Query0),
+    fragment_printable(Fragment, Fragment0),
+    atom_concat(Scheme, ':/', Atom0),
+    atom_concat(Atom0, Path0, Atom1),
+    atom_concat(Atom1, Query0, Atom2),
+    atom_concat(Atom2, Fragment0, Atom3),
+    atom_string(Atom3, String),
+    urilib_parse(String, _).
+
+urilib_parse(String, 
+             uri(Scheme, Userinfo, Host, Port, Path, Query, Fragment)) :-
+
+    var(String), atom(Scheme), is_default_order(Scheme), !, Host \= [],
+
+    % write to string
+    userinfo_printable(Userinfo, Userinfo0),
+    host_printable(Host, Host0),
+    port_printable(Scheme, Port, Port0),
+    path_printable(Path, Path0),
+    query_printable(Query, Query0),
+    fragment_printable(Fragment, Fragment0),
+    atom_concat(Scheme, '://', Atom0),
+    atom_concat(Atom0, Userinfo0, Atom1),
+    atom_concat(Atom1, Host0, Atom2),
+    atom_concat(Atom2, Port0, Atom3),
+    atom_concat(Atom3, Path0, Atom4),
+    atom_concat(Atom4, Query0, Atom5),
+    atom_concat(Atom5, Fragment0, Atom6),
+    atom_string(Atom6, String),
+    urilib_parse(String, _).
+
+urilib_parse(String, 
+             uri(Scheme, Userinfo, [], [], [], [], [])) :-
+    var(String), atom(scheme), telfaxorder(Scheme), !, atom(Userinfo),
+    atom_concat(Scheme, ':', Atom0),
+    atom_concat(Atom0, Userinfo, Atom1),
+    atom_string(Atom1, String),
+    urilib_parse(String, _).
+
+urilib_parse(String, 
+    uri(mailto, Userinfo, [], _, [], [], [])) :-
+    var(String), atom(Userinfo), !,
+    atom_concat('mailto:', Userinfo, Atom0),
+    atom_string(Atom0, String),
+    urilib_parse(String, _).
+
+urilib_parse(String, 
+    uri(mailto, Userinfo, Host, _, [], [], [])) :-
+    var(String), atom(Userinfo), !, atom(Host),
+    atom_concat('mailto:', Userinfo, Atom0),
+    atom_concat(Atom0, '@', Atom1),
+    atom_concat(Atom1, Host, Atom2),
+    atom_string(Atom2, String),
+    urilib_parse(String, _).
+
+urilib_parse(String,
+    uri(news, [], Host, _, [], [], [])) :-
+    var(String), atom(Host), !,
+    atom_concat('news:', Host, Atom0),
+    atom_string(Atom0, String),
+    urilib_parse(String, _).
+
+
+% is_default_order/1
+is_default_order(http).
+is_default_order(https).
+is_default_order(ftp).
+is_default_order(zos).
+
+
+% telfaxorder/1
+telfaxorder(tel).
+telfaxorder(fax).
+
+
+% userinfo_printable/2
+userinfo_printable([], '') :- !.
+userinfo_printable(Userinfo, Userinfo0) :- !,
+    atom_concat(Userinfo, '@', Userinfo0).
+
+% host_printable/2
+host_printable([], '') :- !.
+host_printable(Host, Host) :- !.
+
+% port_printable/3
+port_printable(http, 80, '') :- !.
+port_printable(https, 443, '') :- !.
+port_printable(ftp, 21, '') :- !.
+port_printable(zos, 80, '') :- !.
+port_printable(_, Port, Port0) :- !,
+    atom_concat(':', Port, Port0).
+
+% path_printable/2
+path_printable([], '') :- !.
+path_printable(Path, Path) :- !.
+
+
+% query_printable/2
+query_printable([], '') :- !.
+query_printable(Query, Query0) :-
+    atom_concat('?', Query, Query0).
+
+
+% fragment_printable/2
+fragment_printable([], '') :- !.
+fragment_printable(Fragment, Fragment0) :-
+    atom_concat('#', Fragment, Fragment0).
 
 % urilib_display/2
 urilib_display(Stream,
