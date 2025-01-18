@@ -132,6 +132,7 @@ end
 
     # ZOS
     @test compare_uris(urilib_parse("zos:path.to.resource"), URILib.URILib_structure("zos", nothing, nothing, "80", "path.to.resource", nothing, nothing))
+    @test compare_uris(urilib_parse("zos:path.........a"), URILib.URILib_structure("zos", nothing, nothing, "80", "path.........a", nothing, nothing))
     @test compare_uris(urilib_parse("zos://host.parole/path.pa2t"), URILib.URILib_structure("zos", nothing, "host.parole", "80", "path.pa2t", nothing, nothing))
     @test compare_uris(urilib_parse("zos:asdaiasd3uibdfssd98dfs"), URILib.URILib_structure("zos", nothing, nothing, "80", "asdaiasd3uibdfssd98dfs", nothing, nothing))
     @test compare_uris(urilib_parse("zos:path?query"), URILib.URILib_structure("zos", nothing, nothing, "80", "path", "query", nothing))

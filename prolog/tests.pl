@@ -108,6 +108,8 @@
 %ZOS
 :- urilib_parse("zos:path.to.resource",
 	uri(zos, [], [], 80, 'path.to.resource', [], [])).
+:- urilib_parse("zos:path.....si",
+	uri(zos, [], [], 80, 'path.....si', [], [])).
 :- urilib_parse("zos://host.parole/path.pa2t",
 	uri(zos, [], 'host.parole', 80, 'path.pa2t', [], [])).
 :- urilib_parse("zos:asdaiasd3uibdfssd98dfs", 
