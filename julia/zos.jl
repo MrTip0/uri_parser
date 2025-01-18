@@ -20,7 +20,7 @@ function read_id44(uri :: URILib_structure,
         error("Invalid URI")
     elseif length(s) == 0
         uri
-    elseif is_char(s[1])
+    elseif is_alphanumeric(s[1])
         uri.path = string(uri.path, s[1])
         read_id44(uri, s[2 : end], counter + 1)
     elseif s[1] == '.'
@@ -43,7 +43,7 @@ function read_id44_dot(uri :: URILib_structure,
                        counter :: Int) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         error("Invalid URI")
-    elseif is_char(s[1])
+    elseif is_alphanumeric(s[1])
         uri.path = string(uri.path, s[1])
         read_id44(uri, s[2 : end], counter + 1)
     elseif s[1] == '.'
@@ -71,7 +71,7 @@ function read_id8(uri :: URILib_structure,
                   counter :: Int) :: Union{URILib_structure, Nothing}
     if length(s) == 0 || (counter >= 8 && s[1] != ')')
         error("Invalid URI")
-    elseif is_char(s[1])
+    elseif is_alphanumeric(s[1])
         uri.path = string(uri.path, s[1])
         read_id8(uri, s[2 : end], counter + 1)
     elseif s[1] == ')'

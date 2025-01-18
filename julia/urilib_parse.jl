@@ -15,7 +15,7 @@ include("display.jl")
 
 function urilib_parse(s :: String) :: Union{URILib_structure, Nothing}
     ((uri) -> begin
-        if uri.path === nothing && uri.scheme === "query"
+        if uri.path === nothing && uri.scheme == "zos"
             error("Invalid URI")
         else
             uri

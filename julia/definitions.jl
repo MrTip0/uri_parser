@@ -26,7 +26,7 @@ function is_alphanumeric(v :: Char)
 end
 
 function is_char(v :: Char)
-    is_alphanumeric(v) || v |> in(['_', '-', '+', '=', ':'])
+    is_alphanumeric(v) || v |> in(['_', '-', '+', '='])
 end
 
 

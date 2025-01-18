@@ -67,7 +67,7 @@ function second_slash(uri :: URILib_structure,
                       s :: String, path_fun :: Function
                       ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
-        error("Invalid URI")
+        uri
     elseif is_char(s[1])
         path_fun(uri, s)
     elseif s[1] == '/'
