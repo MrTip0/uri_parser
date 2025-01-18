@@ -70,7 +70,7 @@ letter('Y').
 letter('Z').
 
 
-% alfanum/1
+% alphanum/1
 alphanum(X) :- digit(X).
 alphanum(X) :- letter(X).
 
@@ -81,14 +81,13 @@ char('_').
 char('-').
 char('=').
 char('+').
-char(':').
 
 
 % urilib_parse/2
 urilib_parse(String, 
              uri(Scheme0, Userinfo, Host, Port, Path, Query, Fragment)) :-
 
-    string(String),
+    string(String), !,
 
     % split string in chars
     string_chars(String, Chars),
@@ -101,20 +100,7 @@ urilib_parse(String,
 
     % choose next automata
     choose_automata(Rest, Scheme0, Userinfo, Host, Port, Path, Query, 
-                    Fragment),
-                    
-    % remove this if the zos path is not necessary
-    is_zos_path_ok(Scheme, Path).
-
-
-% is_zos_path_ok/2
-is_zos_path_ok(zos, Path) :- !, Path \= [].
-is_zos_path_ok(_, _).
-
-
-% is_zos_path_ok/2
-is_zos_path_ok(zos, Path) :- !, Path \= [].
-is_zos_path_ok(_, _).
+                    Fragment).
 
 
 % urilib_display/2
@@ -155,7 +141,8 @@ choose_automata(String, ftp, Userinfo, Host, Port, Path,
 
 choose_automata(String, zos, Userinfo, Host, Port, Path,
                 Query, Fragment) :- !,
-    default_parser(String, zos, Userinfo, Host, Port, Path, Query, Fragment).
+    default_parser(String, zos, Userinfo, Host, Port, Path, Query, Fragment),
+    Path \= [].
 
 choose_automata(String, mailto, Userinfo0, Host, 25, [], [], []) :- !,
     mailto_parser(String, Userinfo, Host),
@@ -175,6 +162,9 @@ choose_automata(String, fax, Userinfo0, [], [], [], [], []) :- !,
 
 
 % default_parser/8
+default_parser([], http, [], [], 80, [], [], []) :- !.
+default_parser([], https, [], [], 443, [], [], []) :- !.
+default_parser([], ftp, [], [], 21, [], [], []) :- !.
 default_parser(['#' | String], ftp, [], [], 21, [], [], Fragment0) :- !,
     fragment_parser(String, Fragment),
     atom_chars(Fragment0, Fragment).
@@ -282,6 +272,9 @@ default_path_slash([X | String], [X | Path], Query, Fragment) :-
 
 
 % second_slash_parser/8
+second_slash_parser([], http, [], [], 80, [], [], []) :- !.
+second_slash_parser([], https, [], [], 443, [], [], []) :- !.
+second_slash_parser([], ftp, [], [], 21, [], [], []) :- !.
 second_slash_parser([X | String], zos, [], [], 80, Path0, Query, Fragment) :-
     char(X), !,
     zos_path_parser([X | String], Path, Query, Fragment),
@@ -484,7 +477,7 @@ ip3([], ftp, [], 21, [], [], [], 3) :- !.
 ip3([], _, [], 80, [], [], [], 3) :- !.
 ip3([X | String], Scheme, [X | Host], Port, Path, Query, Fragment, Dots) :-
     digit(X), !,
-    ip5(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
+    ip4(String, Scheme, Host, Port, Path, Query, Fragment, Dots).
 ip3(['.' | String], Scheme, ['.' | Host], Port, Path, Query, Fragment, Dots) :-
     !,
     Dots < 3, !,
@@ -581,7 +574,7 @@ zos_path_id44(['?' | String], [], Query0, Fragment, _) :- !,
     query_parser(String, Query, Fragment),
     atom_chars(Query0, Query).
 zos_path_id44([X | String], [X | Path], Query, Fragment, Counter) :-
-    char(X), !, 
+    alphanum(X), !, 
     Counter < 44,
     Counter1 is Counter + 1,
     zos_path_id44(String, Path, Query, Fragment, Counter1).
@@ -595,10 +588,14 @@ zos_path_id44(['(' | String], ['(' | Path], Query, Fragment, _) :- !,
 
 % zos_path_id44_dot/5
 zos_path_id44_dot([X | String], [X | Path], Query, Fragment, Counter) :-
-    char(X), !,
+    alphanum(X), !,
     Counter < 44,
     Counter1 is Counter + 1,
     zos_path_id44(String, Path, Query, Fragment, Counter1).
+zos_path_id44_dot(['.' | String], ['.' | Path], Query, Fragment, Counter) :- !,
+    Counter < 44,
+    Counter1 is Counter + 1,
+    zos_path_id44_dot(String, Path, Query, Fragment, Counter1).
 
 
 % zos_path_id8/5
@@ -611,7 +608,7 @@ zos_path_id8([X | String], [X | Path], Query, Fragment) :- !,
 zos_path_id8_reader([')' | String], [')'], Query, Fragment, _) :- !,
     zos_path_closer(String, Query, Fragment).
 zos_path_id8_reader([X | String], [X | Path], Query, Fragment, Counter) :-
-    char(X), !,
+    alphanum(X), !,
     Counter < 8,
     Counter1 is Counter + 1,
     zos_path_id8_reader(String, Path, Query, Fragment, Counter1).
@@ -681,58 +678,102 @@ mailto_host_name_reader_dot([X | String], [X | Host]) :-
 
 
 % mailto_ip0/3
-mailto_ip0(['0' | String], ['0' | Host], Dots) :- !,
+mailto_ip0(['0' | String], ['0' | Host], Dots) :-
+    !,
     mailto_ip1(String, Host, Dots).
-mailto_ip0(['1' | String], ['1' | Host], Dots) :- !,
+mailto_ip0(['1' | String], ['1' | Host], Dots) :-
+    !,
     mailto_ip1(String, Host, Dots).
-mailto_ip0(['2' | String], ['2' | Host], Dots) :- !,
+mailto_ip0(['2' | String], ['2' | Host], Dots) :-
+    !,
     mailto_ip2(String, Host, Dots).
+mailto_ip0([X | String], [X | Host], Dots) :-
+    digit(X), !,
+    mailto_ip3(String, Host, Dots).
 
 
 % mailto_ip1/3
+mailto_ip1([], [], 3) :- !.
 mailto_ip1([X | String], [X | Host], Dots) :-
     digit(X), !,
     mailto_ip3(String, Host, Dots).
+mailto_ip1(['.' | String], ['.' | Host], Dots) :-
+    !,
+    Dots < 3, !,
+    Dots1 is Dots + 1,
+    mailto_ip0(String, Host, Dots1).
 
 
 % mailto_ip2/3
-mailto_ip2(['0' | String], ['0' | Host], Dots) :- !,
+mailto_ip2([], [], 3) :- !.
+mailto_ip2(['0' | String], ['0' | Host], Dots) :-
+    !,
     mailto_ip3(String, Host, Dots).
-mailto_ip2(['1' | String], ['1' | Host], Dots) :- !,
+mailto_ip2(['1' | String], ['1' | Host], Dots) :-
+    !,
     mailto_ip3(String, Host, Dots).
-mailto_ip2(['2' | String], ['2' | Host], Dots) :- !,
+mailto_ip2(['2' | String], ['2' | Host], Dots) :-
+    !,
     mailto_ip3(String, Host, Dots).
-mailto_ip2(['3' | String], ['3' | Host], Dots) :- !,
+mailto_ip2(['3' | String], ['3' | Host], Dots) :-
+    !,
     mailto_ip3(String, Host, Dots).
-mailto_ip2(['4' | String], ['3' | Host], Dots) :- !,
+mailto_ip2(['4' | String], ['3' | Host], Dots) :-
+    !,
     mailto_ip3(String, Host, Dots).
-mailto_ip2(['5' | String], ['5' | Host], Dots) :- !,
+mailto_ip2(['5' | String], ['5' | Host], Dots) :-
+    !,
+    mailto_ip5(String, Host, Dots).
+mailto_ip2([X | String], [X | Host], Dots) :-
+    digit(X), !,
     mailto_ip4(String, Host, Dots).
+mailto_ip2(['.' | String], ['.' | Host], Dots) :-
+    !,
+    Dots < 3, !,
+    Dots1 is Dots + 1,
+    mailto_ip0(String, Host, Dots1).
 
 
 % mailto_ip3/3
+mailto_ip3([], [], 3) :- !.
 mailto_ip3([X | String], [X | Host], Dots) :-
     digit(X), !,
-    mailto_ip5(String, Host, Dots).
+    mailto_ip4(String, Host, Dots).
+mailto_ip3(['.' | String], ['.' | Host], Dots) :-
+    !,
+    Dots < 3, !,
+    Dots1 is Dots + 1,
+    mailto_ip0(String, Host, Dots1).
 
 
 % mailto_ip4/3
-mailto_ip4(['0' | String], ['0' | Host], Dots) :- !,
-    mailto_ip5(String, Host, Dots).
-mailto_ip4(['1' | String], ['1' | Host], Dots) :- !,
-    mailto_ip5(String, Host, Dots).
-mailto_ip4(['2' | String], ['2' | Host], Dots) :- !,
-    mailto_ip5(String, Host, Dots).
-mailto_ip4(['3' | String], ['3' | Host], Dots) :- !,
-    mailto_ip5(String, Host, Dots).
-mailto_ip4(['4' | String], ['4' | Host], Dots) :- !,
-    mailto_ip5(String, Host, Dots).
-mailto_ip4(['5' | String], ['5' | Host], Dots) :- !,
-    mailto_ip5(String, Host, Dots).
+mailto_ip4([], [], 3) :- !.
+mailto_ip4(['.' | String], ['.' | Host], Dots) :-
+    Dots < 3, !,
+    Dots1 is Dots + 1,
+    mailto_ip0(String, Host, Dots1).
 
 
 % mailto_ip5/3
 mailto_ip5([], [], 3) :- !.
+mailto_ip5(['0' | String], ['0' | Host], Dots) :-
+    !,
+    mailto_ip4(String, Host, Dots).
+mailto_ip5(['1' | String], ['1' | Host], Dots) :-
+    !,
+    mailto_ip4(String, Host, Dots).
+mailto_ip5(['2' | String], ['2' | Host], Dots) :-
+    !,
+    mailto_ip4(String, Host, Dots).
+mailto_ip5(['3' | String], ['3' | Host], Dots) :-
+    !,
+    mailto_ip4(String, Host, Dots).
+mailto_ip5(['4' | String], ['4' | Host], Dots) :-
+    !,
+    mailto_ip4(String, Host, Dots).
+mailto_ip5(['5' | String], ['5' | Host], Dots) :-
+    !,
+    mailto_ip4(String, Host, Dots).
 mailto_ip5(['.' | String], ['.' | Host], Dots) :-
     Dots < 3, !,
     Dots1 is Dots + 1,
