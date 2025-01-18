@@ -1,9 +1,9 @@
 # Introduzione al predicato urilib_parse/2
 
 Il predicato `urilib_parse` accetta come primo parametro una URI che può
-    appartenere ai seguenti schemi: http, https, ftp, tel, fax, mailto, news,
-    e zos. Come secondo parametro, il predicato restituisce un funtore del tipo
-    `uri(Scheme, Userinfo, Host, Port, Path, Query, Fragment)`, dove:
+appartenere ai seguenti schemi: http, https, ftp, tel, fax, mailto, news,
+e zos. Come secondo parametro, il predicato restituisce un funtore del tipo
+`uri(Scheme, Userinfo, Host, Port, Path, Query, Fragment)`, dove:
 
 - `Scheme` rappresenta lo schema della URI (ad esempio, http, https, ecc.).
 - `Userinfo` contiene le informazioni dell'utente (se presenti).

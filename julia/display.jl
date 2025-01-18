@@ -21,6 +21,10 @@ function urilib_display(uri :: URILib_structure, stream :: IO) :: Bool
     true
 end
 
+function urilib_display(uri :: URILib_structure) :: Bool
+    urilib_display(uri, stdout)
+end
+
 function urilib_display_scheme(uri :: URILib_structure) :: String
     if uri.scheme === nothing
         "nothing"

@@ -149,14 +149,14 @@ urilib_parse(String,
     urilib_parse(String, _).
 
 urilib_parse(String, 
-    uri(mailto, Userinfo, [], _, [], [], [])) :-
+	     uri(mailto, Userinfo, [], _, [], [], [])) :-
     var(String), atom(Userinfo), !,
     atom_concat('mailto:', Userinfo, Atom0),
     atom_string(Atom0, String),
     urilib_parse(String, _).
 
 urilib_parse(String, 
-    uri(mailto, Userinfo, Host, _, [], [], [])) :-
+	     uri(mailto, Userinfo, Host, _, [], [], [])) :-
     var(String), atom(Userinfo), !, atom(Host),
     atom_concat('mailto:', Userinfo, Atom0),
     atom_concat(Atom0, '@', Atom1),
@@ -165,7 +165,7 @@ urilib_parse(String,
     urilib_parse(String, _).
 
 urilib_parse(String,
-    uri(news, [], Host, _, [], [], [])) :-
+	     uri(news, [], Host, _, [], [], [])) :-
     var(String), atom(Host), !,
     atom_concat('news:', Host, Atom0),
     atom_string(Atom0, String),
@@ -199,7 +199,7 @@ port_printable(https, 443, '') :- !.
 port_printable(ftp, 21, '') :- !.
 port_printable(zos, 80, '') :- !.
 port_printable(_, Port, Port0) :- !, atom(Port),
-    atom_concat(':', Port, Port0).
+				  atom_concat(':', Port, Port0).
 
 % path_printable/2
 path_printable([], '') :- !.

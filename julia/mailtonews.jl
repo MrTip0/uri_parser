@@ -78,8 +78,8 @@ end
 
 
 function mailtonewsip0(uri :: URILib_structure, s :: String,
-             counter :: Int
-             ) :: Union{URILib_structure, Nothing}
+                       counter :: Int
+                       ) :: Union{URILib_structure, Nothing}
     if length(s) == 0
         error("Invalid URI")
     elseif s[1] |> in(['0', '1'])
@@ -97,8 +97,8 @@ function mailtonewsip0(uri :: URILib_structure, s :: String,
 end
 
 function mailtonewsip1(uri :: URILib_structure, s :: String,
-             counter :: Int
-             ) :: Union{URILib_structure, Nothing}
+                       counter :: Int
+                       ) :: Union{URILib_structure, Nothing}
     if length(s) == 0 && counter == 3
         uri
     elseif length(s) == 0
@@ -115,8 +115,8 @@ function mailtonewsip1(uri :: URILib_structure, s :: String,
 end
 
 function mailtonewsip2(uri :: URILib_structure, s :: String,
-             counter :: Int
-             ) :: Union{URILib_structure, Nothing}
+                       counter :: Int
+                       ) :: Union{URILib_structure, Nothing}
     if length(s) == 0 && counter == 3
         uri
     elseif length(s) == 0
@@ -139,8 +139,8 @@ function mailtonewsip2(uri :: URILib_structure, s :: String,
 end
 
 function mailtonewsip3(uri :: URILib_structure, s :: String,
-             counter :: Int
-             ) :: Union{URILib_structure, Nothing}
+                       counter :: Int
+                       ) :: Union{URILib_structure, Nothing}
     if length(s) == 0 && counter == 3
         uri
     elseif length(s) == 0
@@ -157,8 +157,8 @@ function mailtonewsip3(uri :: URILib_structure, s :: String,
 end
 
 function mailtonewsip4(uri :: URILib_structure, s :: String,
-             counter :: Int
-             ) :: Union{URILib_structure, Nothing}
+                       counter :: Int
+                       ) :: Union{URILib_structure, Nothing}
     if length(s) == 0 && counter == 3
         uri
     elseif length(s) == 0
@@ -172,8 +172,8 @@ function mailtonewsip4(uri :: URILib_structure, s :: String,
 end
 
 function mailtonewsip5(uri :: URILib_structure, s :: String,
-             counter :: Int
-             ) :: Union{URILib_structure, Nothing}
+                       counter :: Int
+                       ) :: Union{URILib_structure, Nothing}
     if length(s) == 0 && counter == 3
         uri
     elseif length(s) == 0
