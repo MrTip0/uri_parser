@@ -4,12 +4,12 @@ using .URILib
 
 function compare_uris(uri1, uri2)
     return uri1.scheme == uri2.scheme &&
-           uri1.userinfo == uri2.userinfo &&
-           uri1.host == uri2.host &&
-           uri1.port == uri2.port &&
-           uri1.path == uri2.path &&
-           uri1.query == uri2.query &&
-           uri1.fragment == uri2.fragment
+        uri1.userinfo == uri2.userinfo &&
+        uri1.host == uri2.host &&
+        uri1.port == uri2.port &&
+        uri1.path == uri2.path &&
+        uri1.query == uri2.query &&
+        uri1.fragment == uri2.fragment
 end
 
 @testset "URI Parsing Tests" begin
